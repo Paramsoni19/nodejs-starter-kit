@@ -1,15 +1,31 @@
 const mongoose = require('mongoose');
+const Pool = require("pg").Pool;
 const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
 
 let server;
-mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
+// mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
+// 	logger.info('Connected to MongoDB');
+// 	server = app.listen(config.port, () => {
+// 		logger.info(`Listening to port ${config.port}`);
+// 	});
+// });
+
+const pool = new Pool({
+    user: "postgres",
+    password: "kth18822",
+    host: "localhost",
+    port: 5432,
+    database: "perntodo"
+});
+
+if(pool){
 	logger.info('Connected to MongoDB');
 	server = app.listen(config.port, () => {
 		logger.info(`Listening to port ${config.port}`);
 	});
-});
+}
 
 const exitHandler = () => {
 	if (server) {
